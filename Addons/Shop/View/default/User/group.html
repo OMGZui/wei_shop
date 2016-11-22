@@ -1,0 +1,77 @@
+<extend name="Base/common" />
+<block name="body">
+    <!--<link rel="stylesheet" href="./bootstrap/css/bootstrap.min.css">-->
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <style>
+        .navbar-inverse {
+            background-color:#fff;
+            border-color:#fff;
+        }
+
+        .navbar-fixed-bottom, .navbar-fixed-top {
+            position: static;
+            right: 0;
+            left: 0;
+            z-index: 0;
+        }
+        tr,td,th{
+            text-align: center;
+        }
+        .active{
+            color: #000000;
+            font-weight: bold;
+            font-size: 16px;
+
+        }
+
+    </style>
+        <div class="span9 page_message">
+        <section id="contents">
+            <ol class="breadcrumb">
+                <li ><a href="{:addons_url ( 'Shop://User/lists' )}">会员管理</a></li>
+                <li ><a href="{:addons_url ( 'Shop://User/level' )}">会员等级</a></li>
+                <li class="active"><a href="{:addons_url ( 'Shop://User/group' )}">会员分组</a></li>
+            </ol>
+
+            <div class="panel panel-default">
+                    <div class="panel-heading">
+                        会员分组设置
+                    </div>
+                    <div class="panel-body">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>分组名称</th>
+                                <th>会员数</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <foreach name="lists" item="vo" key="key">
+                            <tr>
+                                <td>{$vo.group_name}</td>
+                                <td>{$group_num.$key|count}</td>
+                                <td>
+                                    <a class="btn btn-default" href="{:addons_url ( 'Shop://User/lists',array('group'=>$vo[group_name]))}" title="会员"><i class="fa fa-users"></i></a>
+                                    <a class="btn btn-default" href="{:addons_url('Shop://User/group_edit',array('id'=>$vo[id]))}" title="编辑信息"><i class="fa fa-edit"></i></a>
+                                    <a class="btn btn-default" href="{:addons_url('Shop://User/group_del',array('id'=>$vo[id]))}" title="删除" onclick="return confirm('确认删除此会员分组吗？');return false;"><i class="fa fa-times" aria-hidden="true"></i></a>
+                                </td>
+                            </tr>
+                            </foreach>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="panel-footer">
+                        <a class="btn btn-default" href="{:addons_url ( 'Shop://User/group_add' )}"><i class="fa fa-plus"></i> 添加新分组</a>
+                    </div>
+                </div>
+        </section>
+    </div>
+</block>
+<block name="script">
+    <script type="text/javascript">
+        $(function(){
+
+        })
+    </script>
+</block>

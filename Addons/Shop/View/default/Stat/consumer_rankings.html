@@ -1,0 +1,170 @@
+<extend name="Base/common"/>
+<block name="body">
+    <!--<link rel="stylesheet" href="./bootstrap/css/bootstrap.min.css">-->
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="__STATIC__/shop.css?v={:SITE_VERSION}" rel="stylesheet">
+    <script type="text/javascript" src="__STATIC__/laydate/laydate.js"></script>
+    <style>
+        .navbar-inverse {
+            background-color: #fff;
+            border-color: #fff;
+        }
+
+        .navbar-fixed-bottom, .navbar-fixed-top {
+            position: static;
+            right: 0;
+            left: 0;
+            z-index: 0;
+        }
+        .current,.first,.prev,.next,.end,.num{
+            position: relative;
+            float: left;
+            padding: 6px 12px;
+            margin-left: -1px;
+            line-height: 1.42857143;
+            color: #337ab7;
+            text-decoration: none;
+            background-color: #fff;
+            border: 1px solid #ddd;
+        }
+
+    </style>
+    <div class="span9 page_message">
+        <section id="contents">
+            <ul class="nav nav-tabs">
+                <li><a href="{:addons_url('Shop://Stat/order_stat')}">订单统计</a></li>
+                <li><a href="{:addons_url('Shop://Stat/sales_statistics')}">销售统计</a></li>
+                <!--<li><a href="{:addons_url('Shop://Stat/sale_rankings')}">商品销售排行</a></li>-->
+                <li><a href="{:addons_url('Shop://Stat/order_details')}">商品销售明细</a></li>
+                <li class="active"><a href="{:addons_url('Shop://Stat/consumer_rankings')}">会员消费排行</a></li>
+            </ul>
+            <br>
+            <div class="panel panel-info">
+                <div class="panel-heading">会员消费排行</div>
+                <div class="panel-body">
+
+                    <form action="" method="post" class="form-horizontal" role="form" id="search-form">
+                        <div class="form-group">
+                            <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">会员名/手机号</label>
+                            <div class="col-sm-8 col-lg-9 col-xs-12">
+                                <input name="name_tel" id="name_tel" type="text" class="form-control" value="{:I('name_tel')}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label"></label>
+                            <div class="col-sm-8 col-lg-9 col-xs-12">
+                                <button type="button" class="btn btn-default" id="search"
+                                        url="{:addons_url('Shop://Stat/consumer_rankings')}"><i
+                                        class="fa fa-search"></i> 搜索
+                                </button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel panel-default">
+                    <div class="panel-heading"></div>
+                    <div class="panel-body">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th style="width:80px;">排行</th>
+                                <th>粉丝</th>
+                                <th>姓名</th>
+                                <th>手机号</th>
+                                <th>等级</th>
+                                <th>消费金额</th>
+                                <th>订单数</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <foreach name="lists" item="vo" key="key">
+                                <neq name="vo.uid" value="">
+                                    <tr>
+                                        <td>
+                                            <label class="label label-danger" style="padding:8px;">&nbsp;
+                                                <php>
+                                                    if($_GET['p'] == 0){
+                                                        echo $key+1;
+                                                    }else{
+                                                        echo $_GET['p']*($key+1);
+                                                    }
+                                                </php>
+                                                &nbsp;</label>
+                                        </td>
+                                        <td><img src="{$vo.headimgurl}"
+                                                 style="padding:1px;width:30px;height:30px;border:1px solid #ccc">
+                                            {$vo.nickname|deal_emoji}
+                                        </td>
+                                        <td>{$vo.truename}</td>
+                                        <td>{$vo.mobile}</td>
+                                        <td>
+                                            <if condition=" ($vo['order']['total_price'] gt 10000.00)  "> 钻石会员
+                                                <elseif condition="$vo['order']['total_price'] gt 4000.00"/>白金会员
+                                                <elseif condition="$vo['order']['total_price'] gt 1000.00"/>黄金会员
+                                                <elseif condition="$vo['order']['total_price'] gt 400.00"/>白银会员
+                                                <elseif condition="$vo['order']['total_price'] gt 100.00"/>青铜会员
+                                                <else /> 普通会员
+                                            </if>
+                                        </td>
+                                        <td>{$vo.order.total_price}</td>
+                                        <td>{$vo.order.order_number}</td>
+                                    </tr>
+                                </neq>
+                            </foreach>
+                            </tbody>
+                        </table>
+                        <div>
+<!--
+                            <ul class="pagination pagination-centered">
+                                <li class="active">
+                                    <a href="javascript:;">1</a>
+                                </li>
+                                <li>
+                                    <a href="">2</a>
+                                </li>
+                                <li>
+                                    <a href="" class="pager-nav">下一页»</a></li>
+                                <li>
+                                    <a href="" class="pager-nav">尾页</a></li>
+                            </ul>
+-->
+                            {$page}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</block>
+<block name="script">
+    <script type="text/javascript">
+        $(function () {
+            $("#search").click(function () {
+                var url = $(this).attr('url');
+                //会员名
+                var name_tel = $("#name_tel").val();
+                name_tel = $("#name_tel").attr('name') + '=' + name_tel;
+
+                if (url.indexOf('?') > 0) {
+                    url += '&' + name_tel;
+
+                } else {
+                    url += '?' + '&' + name_tel;
+                }
+                window.location.href = url;
+            });
+            //回车自动提交
+            $('#search-form').find('input').keyup(function (event) {
+                if (event.keyCode === 13) {
+                    $("#search").click();
+                }
+            });
+
+        });
+
+    </script>
+
+</block>

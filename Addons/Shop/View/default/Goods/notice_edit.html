@@ -1,0 +1,71 @@
+<extend name="Base/common"/>
+<block name="body">
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <style>
+        .navbar-inverse {
+            background-color:#fff;
+            border-color:#fff;
+        }
+
+        .navbar-fixed-bottom, .navbar-fixed-top {
+            position: static;
+            right: 0;
+            left: 0;
+            z-index: 0;
+        }
+    </style>
+    <div class="span9 page_message">
+        <section id="contents">
+            <div class="main">
+                <form action="{:addons_url('Shop://Goods/notice_edit_do')}" method="post" class="form-horizontal form" enctype="multipart/form-data">
+                    <input type="hidden" name="id" value="{:I('id')}">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            会员分组设置
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span
+                                        style="color:red">*</span> 公告内容</label>
+                                <div class="col-sm-9 col-xs-12">
+                                    <textarea name="content" id="content" cols="30" rows="10" class="form-control">{$notice.content}</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span
+                                        style="color:red">*</span> 状态</label>
+                                <div class="col-sm-9 col-xs-12">
+                                    <input type="radio" value="1" name="is_show" class="form-inline" <eq name="notice.is_show" value="1">checked="checked"</eq>>显示
+                                    <input type="radio" value="0" name="is_show" class="form-inline"<eq name="notice.is_show" value="0">checked="checked"</eq>>不显示
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span
+                                        style="color:red">*</span> 时间</label>
+                                <div class="col-sm-9 col-xs-12">
+                                    <input type="text" class="form-control" value="{$notice.Ctime|time_format}" disabled="disabled">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-12 col-sm-3 col-md-2 control-label"></label>
+                                <div class="col-sm-9 col-xs-12">
+                                    <input type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1">
+                                    <input type="button" name="back" onclick="history.back()" value="返回列表" class="btn btn-default">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </section>
+    </div>
+</block>
+<block name="script">
+    <script type="text/javascript">
+        $(function () {
+
+        })
+    </script>
+</block>

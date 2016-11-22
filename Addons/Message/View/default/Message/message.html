@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>message</title>
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="bootstrap.css">-->
+    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        .panel-heading >a{
+            float: right;
+        }
+        .panel-heading >a:hover{
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <span class="glyphicon glyphicon-user"></span>
+            <b>留言板</b>
+            <a href="{:U('index',array('token'=>get_token(),'uid'=>get_openid() ))}">
+                <span class="glyphicon glyphicon-eye-open"></span>
+                <b>查看>></b>
+            </a>
+        </div>
+        <div class="panel-body">
+            <form action="{:addons_url('Message://Message/add')}" method="post" role="form">
+            <!--<form action="{:U('add')}" method="post" role="form">-->
+                <div class="form-group">
+                    <label for="textarea">留言内容</label>
+                    <textarea name="content" id="content" cols="20" rows="10" class="form-control" placeholder="请输入留言内容"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="name">你的名字</label>
+                    <input type="text" class="form-control" id="name" name="name" value="{$user.nickname}">
+                </div>
+                <button type="submit" class="btn btn-info" >提交</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

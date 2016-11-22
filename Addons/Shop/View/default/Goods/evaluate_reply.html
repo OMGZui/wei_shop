@@ -1,0 +1,107 @@
+<extend name="Base/common"/>
+<block name="body">
+    <!--<link rel="stylesheet" href="./bootstrap/css/bootstrap.min.css">-->
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="__STATIC__/shop.css?v={:SITE_VERSION}" rel="stylesheet">
+    <script type="text/javascript" src="__STATIC__/laydate/laydate.js"></script>
+    <style>
+        .navbar-inverse {
+            background-color: #fff;
+            border-color: #fff;
+        }
+
+        .navbar-fixed-bottom, .navbar-fixed-top {
+            position: static;
+            right: 0;
+            left: 0;
+            z-index: 0;
+        }
+    </style>
+    <div class="span9 page_message">
+        <section id="contents">
+            <form  action="{:addons_url('Shop://Goods/evaluate_reply_do')}" method="post" class="form-horizontal form"">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        回复评价
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label class="col-xs-12 col-sm-3 col-md-2 control-label">订单号</label>
+                            <div class="col-sm-9 col-xs-12">
+                                <div class="form-control-static">{$lists.0.order_number}</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-12 col-sm-3 col-md-2 control-label">评价商品</label>
+                            <div class="col-sm-9 col-xs-12">
+                                <php>
+                                    $good_datas = $lists[0]['order']['goods_datas'];
+                                    $good_datas = json_decode($good_datas,true);
+                                    //dump($good_datas);
+                                </php>
+                                <input type="text" name="goods" maxlength="30" value="<?php echo $good_datas[0]['title'];?>" id="goods" class="form-control" readonly="">
+                                <span id="goodsthumb" class="help-block"><img style="width:100px;height:100px;border:1px solid #ccc;padding:1px" src="<?php echo $good_datas[0]['cover'];?>"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-12 col-sm-3 col-md-2 control-label">评价者</label>
+                            <div class="col-sm-9 col-xs-12">
+                                <input type="text" name="goods" maxlength="30" value="{$lists.0.uid.nickname|deal_emoji}" id="goods" class="form-control" readonly="">
+                                <span id="goodsthumb" class="help-block"><img style="width:100px;height:100px;border:1px solid #ccc;padding:1px" src="{$lists.0.uid.headimgurl}"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-12 col-sm-3 col-md-2 control-label">评分等级</label>
+                            <div class="col-sm-9 col-xs-12">
+                                <div class="form-control-static" style="color:#ff6600">
+                                    <php>
+                                        for($i=0;$i<$lists[0]['star'];$i++){
+                                        echo '<i class="fa fa-star"></i>';
+                                        }
+                                    </php>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>
+                                买家评价</label>
+                            <div class="col-sm-9 col-xs-12">
+                                <div class="form-control-static">{$lists.0.ev_content}</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-12 col-sm-3 col-md-2 control-label"></label>
+                            <div class="col-sm-9 col-xs-12">
+                                <div class="input-group multi-img-details">
+                                    <div class="multi-item">
+                                        <a href="" target="_blank">
+                                            <img class="img-responsive img-thumbnail" src="" title="">
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-12 col-sm-3 col-md-2 control-label">商家回复</label>
+                            <div class="col-sm-9 col-xs-12">
+                                <input type="hidden" name="id" value="{:I('id')}">
+                                <textarea name="ev_content_reply" class="form-control">{$lists.0.ev_content_reply}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group"></div>
+                        <div class="form-group">
+                            <label class="col-xs-12 col-sm-3 col-md-2 control-label"></label>
+                            <div class="col-sm-9 col-xs-12">
+                                <input type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1">
+                                <input type="button" name="back" onclick="history.back()" style="margin-left:10px;" value="返回列表" class="btn btn-default">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+</block>
+<block name="script">
+</block>

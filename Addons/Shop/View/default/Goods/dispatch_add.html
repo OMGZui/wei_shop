@@ -1,0 +1,96 @@
+<extend name="Base/common"/>
+<block name="body">
+    <!--<link rel="stylesheet" href="./bootstrap/css/bootstrap.min.css">-->
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="__STATIC__/shop.css?v={:SITE_VERSION}" rel="stylesheet">
+    <script type="text/javascript" src="__STATIC__/laydate/laydate.js"></script>
+    <style>
+        .navbar-inverse {
+            background-color: #fff;
+            border-color: #fff;
+        }
+
+        .navbar-fixed-bottom, .navbar-fixed-top {
+            position: static;
+            right: 0;
+            left: 0;
+            z-index: 0;
+        }
+    </style>
+    <div class="span9 page_message">
+        <section id="contents">
+            <form action="{:addons_url('Shop://Dispatch/dispatch_add_do')}" method="post" class="form-horizontal form" enctype="multipart/form-data" >
+                <input type="hidden" name="shop_id" value="{:I('shop_id')}">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        配送方式设置
+                    </div>
+                    <div class="panel-body">
+<!--
+                        <div class="form-group">
+                            <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>配送方式名称</label>
+                            <div class="col-sm-9 col-xs-12">
+                                <input type="text" id="dispatchname" name="dispatchname" class="form-control" value="">
+
+                            </div>
+                        </div>
+-->
+                        <div class="form-group" >
+                            <label class="col-xs-12 col-sm-3 col-md-2 control-label">配送类型</label>
+                            <div class="col-sm-9 col-xs-12">
+                                <label class="radio-inline">
+                                    <input type="radio" name="dispatch_type" id="express" value="1" checked=""> 快递选择
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="dispatch_type" id="COD" value="0">货到付款
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group dispatch0" >
+                            <label class="col-xs-12 col-sm-3 col-md-2 control-label">物流公司</label>
+                            <div class="col-sm-4 col-xs-6">
+                                <select name="express_id" class="form-control input-medium">
+                                    <option value="0"></option>
+                                    <foreach name="lists" item="vo">
+                                        <option value="{$vo.id}" >{$vo.express_name}</option>
+                                    </foreach>
+                                </select>
+                                <span class="help-block">如果您选择了常用快递，则客户可以订单中查询快递信息，如果缺少您想要的快递，您可以联系我们! </span>
+                            </div>
+                        </div>
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">是否显示</label>
+                        <div class="col-sm-9 col-xs-12">
+                            <label class="radio-inline">
+                                <input type="radio" name="is_show" value="1" checked=""> 是
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="is_show" value="0" > 否
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group"></div>
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label"></label>
+                        <div class="col-sm-9 col-xs-12">
+                            <input type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1">
+                            <input type="button" name="back" onclick="history.back()" style="margin-left:10px;" value="返回列表" class="btn btn-default col-lg-1">
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+</block>
+<block name="script">
+    <script>
+        $(function () {
+            $("#COD").click(function () {
+                $('.dispatch0').css({"display":"none"});
+            });
+            $("#express").click(function () {
+                $('.dispatch0').css({"display":""});
+            });
+        })
+    </script>
+</block>

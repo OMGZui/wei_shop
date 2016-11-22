@@ -1,0 +1,10 @@
+2016-09-18 09:12:45 Error Info : curl falied. Error Info: Failed to connect to api.weixin.qq.com port 443: Timed out
+2016-09-18 09:12:50 Error Info : curl falied. Error Info: Failed to connect to api.weixin.qq.com port 443: Timed out
+2016-09-18 09:13:08 Error Info : curl falied. Error Info: Failed to connect to api.weixin.qq.com port 443: Timed out
+2016-09-21 11:56:51 Error Info : curl falied. Error Info: Failed to connect to api.weixin.qq.com port 443: Host unreachable
+2016-09-21 11:57:00 Error Info : curl falied. Error Info: Failed to connect to api.weixin.qq.com port 443: Host unreachable
+2016-09-21 11:57:07 Error Info : curl falied. Error Info: Failed to connect to api.weixin.qq.com port 443: Host unreachable
+2016-09-21 11:57:08 Error Info : curl falied. Error Info: Could not resolve host: api.weixin.qq.com
+2016-09-21 11:57:15 Error Info : curl falied. Error Info: Could not resolve host: api.weixin.qq.com
+2016-09-21 11:57:17 Error Info : curl falied. Error Info: Could not resolve host: api.weixin.qq.com
+2016-09-21 11:57:18 Error Info : curl falied. Error Info: Could not resolve host: api.weixin.qq.com

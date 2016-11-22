@@ -1,0 +1,169 @@
+<extend name="Base/common"/>
+<block name="body">
+    <!--<link rel="stylesheet" href="./bootstrap/css/bootstrap.min.css">-->
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="__STATIC__/shop.css?v={:SITE_VERSION}" rel="stylesheet">
+    <script type="text/javascript" src="__STATIC__/laydate/laydate.js"></script>
+    <style>
+        .navbar-inverse {
+            background-color: #fff;
+            border-color: #fff;
+        }
+
+        .navbar-fixed-bottom, .navbar-fixed-top {
+            position: static;
+            right: 0;
+            left: 0;
+            z-index: 0;
+        }
+    </style>
+    <div class="span9 page_message">
+        <section id="contents">
+            <ul class="nav nav-tabs">
+                <li ><a href="{:addons_url('Shop://Stat/order_stat')}">订单统计</a></li>
+                <li><a href="{:addons_url('Shop://Stat/sales_statistics')}">销售统计</a></li>
+                <!--<li><a href="{:addons_url('Shop://Stat/sale_rankings')}">商品销售排行</a></li>-->
+                <li class="active"><a href="{:addons_url('Shop://Stat/order_details')}">商品销售明细</a></li>
+                <li><a href="{:addons_url('Shop://Stat/consumer_rankings')}">会员消费排行</a></li>
+            </ul>
+            <br>
+            <div class="panel panel-info">
+                <div class="panel-heading">查询商品销售明细</div>
+                <div class="panel-body">
+
+                    <form class="form-horizontal" >
+                        <div class="form-group">
+                            <label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">商品名称</label>
+                            <div class="col-sm-8 col-lg-9 col-xs-12">
+                                <input name="title" id="title" type="text" class="form-control" value="{:I('title')}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">订单时间</label>
+                            <div class="col-sm-8 col-lg-9 col-xs-12">
+                                开始日：<li class="laydate-icon" id="start" name="start" style="width:120px;display: inline;"><php>echo date('Y-m-d',I('start')); </php></li>
+                                结束日：<li class="laydate-icon" id="end" name="end" style="width:120px; display: inline;"><php>echo date('Y-m-d',I('end')); </php></li>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label"></label>
+                            <div class="col-sm-8 col-lg-9 col-xs-12">
+                                <button type="button" class="btn btn-default" id="search" url="{:addons_url('Shop://Stat/order_details')}"><i class="fa fa-search"></i> 搜索</button>
+                                <!--<button type="submit" name="export" value="1" class="btn btn-primary">导出 Excel</button>-->
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">总数: <span style="color:red">{$lists|count}</span></div>
+                <div class="panel-body">
+                    <table class="table table-hover">
+                        <thead class="navbar-inner">
+                        <tr>
+                            <th>订单号</th>
+                            <th>商品名称</th>
+                            <th>数量</th>
+                            <th>价格</th>
+                            <th>成交时间</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <foreach name="lists" item="vo">
+                            <php>
+                                $good_datas = $vo['goods_datas'];
+                                $good_datas = json_decode($good_datas,true);
+                                //dump($good_datas);
+                            </php>
+
+                            <tr>
+                            <td>{$vo.order_number}</td>
+                            <td><img src="<?php echo $good_datas[0]['cover'];?>" style="width: 30px; height: 30px;border:1px solid #ccc;padding:1px;">
+                                <?php echo $good_datas[0]['title'];?></td>
+                            <td><?php echo $good_datas[0]['num'];?></td>
+                            <td>{$vo.total_price}</td>
+                            <td>{$vo.cTime|time_format}</td>
+                        </tr>
+                        </foreach>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+</block>
+<block name="script">
+    <script>
+        var start = {
+            elem: '#start',
+            format: 'YYYY-MM-DD ',
+            //min: laydate.now(), //设定最小日期为当前日期
+            min: '1970-01-01',
+            max: '2099-06-16 ', //最大日期
+            istime: true,
+            istoday: false,
+            choose: function(datas){
+                end.min = datas; //开始日选好后，重置结束日的最小日期
+                end.start = datas; //将结束日的初始值设定为开始日
+            }
+        };
+        var end = {
+            elem: '#end',
+            format: 'YYYY-MM-DD ',
+            //min: laydate.now(),
+            min: '1970-01-01',
+            max: '2099-06-16 ',
+            istime: true,
+            istoday: false,
+            choose: function(datas){
+                start.max = datas; //结束日选好后，重置开始日的最大日期
+            }
+        };
+        laydate(start);
+        laydate(end);
+        laydate.skin('dahong');
+
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            $("#search").click(function(){
+                var url = $(this).attr('url');
+                //开始时间
+                var start = $('#start').text();
+                if(start != ''){
+                    start = new Date(start).getTime()/1000;
+                    start = $('#start').attr('name')+'='+start;
+                }
+                //结束时间
+                var end = $("#end").text();
+                if(end != ''){
+                    end = new Date(end).getTime()/1000;
+                    end = $('#end').attr('name')+'='+end;
+                }
+                //会员名
+                var title = $("#title").val();
+                title = $("#title").attr('name')+ '=' +title;
+
+                if( url.indexOf('?')>0 ){
+                    url += '&' +title + '&' +start +'&' +end ;
+
+                }else{
+                    url += '?' +'&' +title +'&' +start +'&' +end;
+                }
+                window.location.href = url;
+            });
+
+            /*
+             //回车自动提交
+             $('.search-form').find('input').keyup(function(event){
+             if(event.keyCode===13){
+             $("#search").click();
+             }
+             });
+             */
+        });
+
+    </script>
+
+</block>

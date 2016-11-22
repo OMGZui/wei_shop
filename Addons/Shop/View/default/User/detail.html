@@ -1,0 +1,187 @@
+<extend name="Base/common"/>
+<block name="body">
+    <!--<link rel="stylesheet" href="./bootstrap/css/bootstrap.min.css">-->
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="__STATIC__/shop.css?v={:SITE_VERSION}" rel="stylesheet">
+
+    <style>
+        .navbar-inverse {
+            background-color:#fff;
+            border-color:#fff;
+        }
+
+        .navbar-fixed-bottom, .navbar-fixed-top {
+            position: static;
+            right: 0;
+            left: 0;
+            z-index: 0;
+        }
+    </style>
+    <div class="span9 page_message">
+        <section id="contents">
+            <div class="main">
+                    <table cellpadding="0" cellspacing="0" border="0" class="tab1">
+                        <tr>
+                            <td class="t1">会员详细信息</td>
+                        </tr>
+                    </table>
+
+                    <table cellpadding="0" cellspacing="0" border="0" class="tab2">
+                        <form action="{:addons_url('Shop://User/info_update')}" method="post">
+                            <input type="hidden" value="{:I('uid')}" name="uid">
+                        <tr>
+                            <td class="t2"></td>
+                            <td class="t3"></td>
+                        </tr>
+                        <tr>
+                            <td class="t4">粉丝</td>
+                            <td class="t5">
+                                <table cellpadding="0" cellspacing="0" border="0">
+                                    <tr>
+                                        <td><img src="{$rs['headimgurl']}" width="50" height="50"></td>
+                                        <td class="t5_1">{$rs.nickname|deal_emoji}</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td  height="20"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="t6">OPEIND</td>
+                            <td class="t7">{$data['openid']}</td>
+                        </tr>
+                        <tr>
+                            <td  height="15"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="t8">会员等级</td>
+                            <td class="t9">
+                                <select name="level" id="level">
+                                    <option value="{$rs['level']}">{$rs['level']}</option>
+                                    <foreach name="level" item="vo">
+                                        <option value="{$vo['level']}">{$vo['level']}</option>
+                                    </foreach>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td  height="15"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="t8">会员分组</td>
+                            <td class="t9">
+                                <select name="group" id="group">
+                                    <option value="{$rs['group']}">{$rs['group']}</option>
+                                    <foreach name="group" item="vo">
+                                        <option value="{$vo['group_name']}">{$vo['group_name']}</option>
+                                    </foreach>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td  height="15"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="t10">会员姓名</td>
+                            <td class="t11">
+                                <input type="text" name="truename" value="{$rs['truename']}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td  height="15"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="t10">手机号码</td>
+                            <td class="t11">
+                                <input type="text" name="mobile" value="{$rs['mobile']}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td  height="15"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="t10">微信号</td>
+                            <td class="t11">
+                                <input type="text" name="weixin" value="{$rs['weixin']}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td  height="15"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="t6">成交订单数</td>
+                            <td class="t7">{$order|count}</td>
+                        </tr>
+                        <tr>
+                            <td  height="15"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="t6">成交金额</td>
+                            <td class="t7"><neq name="total_money" value="" >{$total_money}<else/>0.00</neq></td>
+                        </tr>
+                        <tr>
+                            <td height="15"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="t6">注册时间</td>
+                            <td class="t7">{$rs['reg_time']|time_format}</td>
+                        </tr>
+<!--
+                        <tr>
+                            <td  height="15"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="t6">关注状态</td>
+                            <td class="t7 t12">已关注</td>
+                        </tr>
+-->
+                        <tr>
+                            <td  height="15"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="t6">备注</td>
+                            <td class="">
+                                <textarea name="remarks" cols="5" rows="5">{$rs['remarks']}</textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td  height="15"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="t15"></td>
+                            <td class="t16">
+                                <button class="btn btn-info" type="submit" >提交</button>
+                                <button class="btn btn-danger" type="button" onclick="history.back()">返回列表</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="t2"></td>
+                            <td class="t3"></td>
+                        </tr>
+                        </form>
+                    </table>
+
+                </div>
+        </section>
+    </div>
+</block>
+<block name="script">
+    <script type="text/javascript">
+        $(function () {
+
+        })
+    </script>
+</block>

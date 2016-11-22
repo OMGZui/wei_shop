@@ -1,0 +1,77 @@
+<extend name="Base/common"/>
+<block name="body">
+    <!--<link rel="stylesheet" href="./bootstrap/css/bootstrap.min.css">-->
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="__STATIC__/shop.css?v={:SITE_VERSION}" rel="stylesheet">
+    <script type="text/javascript" src="__STATIC__/laydate/laydate.js"></script>
+    <style>
+        .navbar-inverse {
+            background-color: #fff;
+            border-color: #fff;
+        }
+
+        .navbar-fixed-bottom, .navbar-fixed-top {
+            position: static;
+            right: 0;
+            left: 0;
+            z-index: 0;
+        }
+    </style>
+    <div class="span9 page_message">
+        <section id="contents">
+            <form action="" method="post">
+                <div class="panel panel-default">
+                    <div class="panel-heading panel-info">
+                        <b>公告管理</b>
+                    </div>
+                    <div class="panel-body table-responsive">
+                        <table class="table table-hover">
+                            <thead class="navbar-inner">
+                            <tr>
+                                <th >ID</th>
+                                <th>内容</th>
+                                <th>状态</th>
+                                <th>发布时间</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <foreach name="lists" item="vo">
+                            <tr>
+                                <td>{$vo.id}</td>
+                                <td>{$vo.content}</td>
+                                <td>
+                                    <eq name="vo.is_show" value="0">
+                                        <label class="label  label-default label-danger">
+                                            不显示
+                                        </label>
+                                    </eq>
+                                    <eq name="vo.is_show" value="1">
+                                        <label class="label  label-default label-info">
+                                            显示
+                                        </label>
+                                    </eq>
+                                </td>
+                                <td>{$vo.Ctime|time_format}</td>
+                                <td style="text-align:left;">
+                                    <a href="{:addons_url('Shop://Goods/notice_edit',array('id'=>$vo[id]))}" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="修改"><i class="fa fa-edit"></i></a>
+                                    <a href="{:addons_url('Shop://Goods/notice_del',array('id'=>$vo[id]))}" class="btn btn-default btn-sm" onclick="return confirm('确认删除此公告?')" title="删除"><i class="fa fa-times"></i></a>
+                                </td>
+                            </tr>
+                            </foreach>
+                            <tr>
+                                <td colspan="6" >
+                                    <a class="btn btn-info" href="{:addons_url('Shop://Goods/notice_add')}"><i class="fa fa-plus"></i> 添加公告</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+</block>
+<block name="script">
+
+</block>

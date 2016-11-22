@@ -1,0 +1,213 @@
+<include file="Public/mobile_head"/>
+<link href="{:ADDON_PUBLIC_PATH}/mobile/common.css?v={:SITE_VERSION}" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+<link href="__STATIC__/font-awesome/css/font-awesome.min.css?v={:SITE_VERSION}" rel="stylesheet">
+<link href="{:CUSTOM_TEMPLATE_PATH}Public/shop.css?v={:SITE_VERSION}" rel="stylesheet" type="text/css">
+
+<body class="withFoot">
+<style type="text/css">
+/*
+    *{margin:0;padding:0;list-style-type:none;}
+    body{color:#666;font:12px/1.5 Arial;}
+    !* star *!
+    #star{position:relative;width:600px;margin:20px auto;height:24px;}
+    #star ul,#star span{float:left;display:inline;height:19px;line-height:19px;}
+    #star ul{margin:0 10px;}
+    #star li{float:left;width:24px;cursor:pointer;text-indent:-9999px;background:url(__STATIC__/star.png) no-repeat;}
+    #star strong{color:#f60;padding-left:10px;}
+    #star li.on{background-position:0 -28px;}
+    #star p{position:absolute;top:20px;width:159px;height:60px;display:none;background:url(__STATIC__/icon.gif) no-repeat;padding:7px 10px 0;}
+    #star p em{color:#f60;display:block;font-style:normal;}
+*/
+/*---------------------------------------demo css--------------------------------------------*/
+/*#starBox{height:20px;padding:5px;width:160px;margin:0 auto 10px;}*/
+/*#starBox em{float:left;width:26px;height:20px;background:url(__PUBLIC__/star.png) 0 -20px no-repeat;}*/
+/*#starNotice{font:12px SimSun;width:130px;margin:0 auto;}*/
+/*-----------------------------------------------------------------------------------*/
+
+/*.star_rader{ display:inline-block; vertical-align:middle; height:30px; width:125px; background:url(__STATIC__/star.png) no-repeat 0 -25px;}*/
+/*.star_rader .star_select{ display:inline-block; height:30px; background:url(__STATIC__/star.png) no-repeat 0 5px;}*/
+
+</style>
+<div class="container">
+        <ul>
+            <volist name="lists" id="vo" key="key">
+                <li>
+                	<span class="address_item" style="padding-left:10px">
+                        <ul>
+                            <php>
+                                $good_datas = $vo['order']['goods_datas'];
+                                $good_datas = json_decode($good_datas,true);
+                            </php>
+                            <li class="" style="float: left; ">
+                                <b>商品名：</b>
+                                <?php echo $good_datas[0]['title'];?>
+                            </li>
+                            <li class="" style="float: right;">
+                                <b>商品图片：</b>
+                                <img src="<?php echo $good_datas[0]['cover'];?>" alt="" width="50" height="50">
+                            </li>
+                            <br>
+                            <li class="" style="clear: both;">
+                                <b>星级：</b>
+<!--
+                                <div id="starBox">
+                                    <em></em>
+                                    <em></em>
+                                    <em></em>
+                                    <em></em>
+                                    <em></em>
+                                    <b id="starNotice"></b>
+                                </div>
+-->
+                            <span class="star_rader">
+                                <span class="star_select" style= "width:{$vo['star']*20}%"></span>
+                            </span>
+                            </li>
+                            <li >
+                                <b>我的评价：</b>
+                                <b name="ev_content" id="ev_content"  > {$vo.ev_content}</b>
+                            </li>
+                            <li class="">
+                                <b>评价时间：</b>
+                                <b>{$vo.time|time_format}</b>
+                            </li>
+                            <eq name="vo.status" value="1">
+                                <li style="color: red;">
+                                    <b>店家回复：</b>
+                                    <b name="ev_content_reply" id="ev_content_reply"  > {$vo.ev_content_reply}</b>
+                                </li>
+                                <li style="color: red;">
+                                    <b>回复时间：</b>
+                                    <b>{$vo.reply_time|time_format}</b>
+                            </li>
+                                <else/>
+                            </eq>
+                            <br>
+                            <input type="hidden" value="{$vo.star}" id="temp">
+                        </ul>
+                    </span>
+                    <!--<a class="write_icon" href="{:U('add_address',array('id'=>$vo['id'],'from'=>0))}" title="编辑">&nbsp;</a>-->
+                </li>
+            </volist>
+        </ul>
+</div>
+
+<!-- 底部导航 -->
+<include file="_footer"/>
+
+<!--
+<script type="text/javascript">
+    window.onload = function (){
+        var oStar = document.getElementById("star");
+        var aLi = oStar.getElementsByTagName("li");
+        var oUl = oStar.getElementsByTagName("ul")[0];
+        var oSpan = oStar.getElementsByTagName("span")[1];
+        var oP = oStar.getElementsByTagName("p")[0];
+        var i = iScore = iStar = 0;
+/*
+        var aMsg = [
+            "很不满意|差得太离谱，与卖家描述的严重不符，非常不满",
+            "不满意|部分有破损，与卖家描述的不符，不满意",
+            "一般|质量一般，没有卖家描述的那么好",
+            "满意|质量不错，与卖家描述的基本一致，还是挺满意的",
+            "非常满意|质量非常好，与卖家描述的完全一致，非常满意"
+        ];
+*/
+        var aMsg = [
+            "很不满意|非常不满",
+            "不满意|不满意",
+            "一般|没有卖家描述的那么好",
+            "满意|还是挺满意的",
+            "非常满意|非常满意"
+        ];
+        var star = $(".star_true").val();
+
+        for (i = 1; i <= aLi.length; i++){
+            aLi[i - 1].index = i;
+            //鼠标移过显示分数
+            aLi[i - 1].onmouseover = function (){
+                fnPoint(this.index);
+                //浮动层显示
+                oP.style.display = "block";
+                //计算浮动层位置
+                oP.style.left = oUl.offsetLeft + this.index * this.offsetWidth - 104 + "px";
+                //匹配浮动层文字内容
+                oP.innerHTML = "<em><b>" + this.index + "</b> 分 " + aMsg[this.index - 1].match(/(.+)\|/)[1] + "</em>" + aMsg[this.index - 1].match(/\|(.+)/)[1]
+            };
+            //鼠标离开后恢复上次评分
+            aLi[i - 1].onmouseout = function (){
+                fnPoint();
+                //关闭浮动层
+                oP.style.display = "none"
+            };
+            //点击后进行评分处理
+            aLi[i - 1].onclick = function (){
+                iStar = this.index;
+                oP.style.display = "none";
+                oSpan.innerHTML = "<strong>" + (this.index) + " 分</strong> (" + aMsg[this.index - 1].match(/\|(.+)/)[1] + ")"
+            };
+            aLi[star-i].className="on";
+        }
+        //评分处理
+        function fnPoint(iArg){
+            //分数赋值
+            iScore = iArg || iStar;
+            for (i = 0; i < aLi.length; i++) aLi[i].className = i < iScore ? "on" : "";
+        }
+    };
+</script>
+-->
+<!--
+<script type="text/javascript">
+    $(function () {
+        $("#ev_content").prop({disabled:true});
+        $("#ev_content_reply").prop({disabled:true});
+        var star = document.getElementsByTagName('em');
+        //var temp = $("#temp").val();
+        var temp = num ;
+        current(temp);
+//        var oDiv = document.getElementById('starBox');
+//        var temp = 0;
+//        for (var i = 0, len = star.length; i < len; i++) {
+//            star[i].index = i;
+//
+//            star[i].onmouseover = function () {
+//                clear();
+//                for (var j = 0; j < this.index + 1; j++) {
+//                    star[j].style.backgroundPosition = '0 0';
+//                }
+//            };
+//
+//            star[i].onmouseout = function () {
+//                for (var j = 0; j < this.index + 1; j++) {
+//                    star[j].style.backgroundPosition = '0 -20px';
+//                }
+//                current(temp);
+//            };
+//
+//            star[i].onclick = function () {
+//                temp = this.index + 1;
+//                document.getElementById('starNotice').value = temp;
+////                    document.getElementById('starNotice').innerHTML = temp + ' 颗星';
+//                current(temp);
+//            }
+//        }
+//        //清除所有
+//        function clear() {
+//            for (var i = 0, len = star.length; i < len; i++) {
+//                star[i].style.backgroundPosition = '0 -20px';
+//            }
+//        }
+
+        //显示当前第几颗星
+        function current(temp) {
+            for (var i = 0; i < temp; i++) {
+                star[i].style.backgroundPosition = '0 0';
+            }
+        }
+    });
+</script>
+-->
+</body>
+</html>

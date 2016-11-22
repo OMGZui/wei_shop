@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="bootstrap.css">-->
+    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        .panel-heading >a{
+            float: right;
+        }
+        .panel-heading >a:hover{
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="panel panel-info" >
+        <div class="panel-heading" >
+            <span class="glyphicon glyphicon-user"></span>
+            <b>留言板</b>
+            <a href="{:U('message',array('token'=>get_token(),'uid'=>get_openid() ))}">
+                <span class="glyphicon glyphicon-pencil"></span>
+                <b>发布>></b>
+            </a>
+        </div>
+        <div class="panel-body" >
+            <foreach name="list" item="vo">
+            <ul class="list-group">
+                <li class="list-group-item">{$vo.name}</li>
+                <li class="list-group-item">{$vo.ctime|time_format}</li>
+                <li class="list-group-item">{$vo.content}</li>
+            </ul>
+            </foreach>
+        </div>
+    </div>
+</div>
+</body>
+</html>

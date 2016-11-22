@@ -1,0 +1,91 @@
+<extend name="Base/common"/>
+<block name="body">
+    <!--<link rel="stylesheet" href="./bootstrap/css/bootstrap.min.css">-->
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="__STATIC__/shop.css?v={:SITE_VERSION}" rel="stylesheet">
+    <script type="text/javascript" src="__STATIC__/laydate/laydate.js"></script>
+    <style>
+        .navbar-inverse {
+            background-color: #fff;
+            border-color: #fff;
+        }
+
+        .navbar-fixed-bottom, .navbar-fixed-top {
+            position: static;
+            right: 0;
+            left: 0;
+            z-index: 0;
+        }
+    </style>
+    <div class="span9 page_message">
+        <section id="contents">
+            <form action="" method="post">
+                <div class="main panel panel-default">
+                    <div class="panel-body table-responsive">
+                        <table class="table table-hover">
+                            <thead class="navbar-inner">
+                            <tr>
+                                <th style="width:50px;">ID</th>
+                                <th>配送方式名称</th>
+                                <th>配送类型</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <foreach name="lists" item="vo">
+                            <tr>
+                                <td>{$vo.id}</td>
+                                <td>
+                                    {$vo.express_id|is_express}
+                                </td>
+                                <td>
+                                    <eq name="vo.dispatch_type" value="0">
+                                        <label class="label  label-default label-danger">
+                                            买家自提
+                                        </label>
+                                        <else/>
+                                        <label class="label  label-default label-info">
+                                            快递配送
+                                        </label>
+
+                                    </eq>
+                                </td>
+                                <td>
+                                    <eq name="vo.is_show" value="0">
+                                        <label class="label  label-default label-danger">
+                                            不启用
+                                        </label>
+                                    </eq>
+                                    <eq name="vo.is_show" value="1">
+                                        <label class="label  label-default label-info">
+                                            启用
+                                        </label>
+                                    </eq>
+                                </td>
+                                <td style="text-align:left;">
+                                    <a href="{:addons_url('Shop://Dispatch/dispatch_edit',array('id'=>$vo[id]))}" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom"
+                                       title="修改" data-original-title="修改"><i class="fa fa-pencil"></i></a>
+                                    <a href="{:addons_url('Shop://Dispatch/dispatch_del',array('id'=>$vo[id]))}" class="btn btn-default btn-sm" onclick="return confirm('确认删除此配送方式?')"
+                                        title="删除"><i class="fa fa-times"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            </foreach>
+
+                            <tr>
+                                <td colspan="8" >
+                                    <a class="btn btn-default" href="{:addons_url('Shop://Dispatch/dispatch_add',array('shop_id'=>I('shop_id')))}" data-original-title="" title=""><i class="fa fa-plus"></i> 添加配送方式</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+</block>
+<block name="script">
+
+</block>

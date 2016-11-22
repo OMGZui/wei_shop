@@ -1,0 +1,200 @@
+<extend name="Base/common"/>
+<block name="body">
+    <!--<link rel="stylesheet" href="./bootstrap/css/bootstrap.min.css">-->
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="__STATIC__/shop.css?v={:SITE_VERSION}" rel="stylesheet">
+    <script type="text/javascript" src="__STATIC__/laydate/laydate.js"></script>
+    <style>
+        .navbar-inverse {
+            background-color: #fff;
+            border-color: #fff;
+        }
+
+        .navbar-fixed-bottom, .navbar-fixed-top {
+            position: static;
+            right: 0;
+            left: 0;
+            z-index: 0;
+        }
+        th{
+            text-align: center;
+        }
+    </style>
+    <div class="span9 page_message">
+        <section id="contents">
+            <form action="" method="get" class="form form-horizontal">
+                <div class="panel panel-info">
+                    <div class="panel-heading">筛选</div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label" >订单号</label>
+                            <div class="col-xs-12 col-sm-8 col-lg-9" >
+                                <input class="form-control" name="order_number" id="order_number" type="text" value="" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label" >评价者</label>
+                            <div class="col-xs-12 col-sm-8 col-lg-9" >
+                                <input class="form-control" name="nickname" id="nickname" type="text" value="" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">按时间</label>
+                            <div class="col-sm-7 col-lg-9 col-xs-12">
+                                开始日：<li class="laydate-icon" id="start" name="start" style="width:120px;display: inline;"><php>echo date('Y-m-d',I('start')); </php></li>
+                                结束日：<li class="laydate-icon" id="end" name="end" style="width:120px; display: inline;"><php>echo date('Y-m-d',I('end')); </php></li>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label"> </label>
+                            <div class="col-xs-12 col-sm-2 col-lg-2">
+                                <button class="btn btn-info" id="search" onclick="return false;" url="{:addons_url('Shop://Goods/evaluate',array('shop_id'=>I('shop_id')))}">
+                                    <i class="fa fa-search"></i> 搜索
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    评价管理 (数量: <b style="color: red;">{$lists|count}</b>  条)
+                </div>
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th style="width:60px;">序号</th>
+                            <th style="width:200px;">订单号</th>
+                            <th style="width:400px;">商品信息</th>
+                            <th style="width:150px;">评价者</th>
+                            <th style="width:150px;">评分等级</th>
+                            <th style="width:50px;">状态</th>
+                            <th style="width:200px;">评价时间</th>
+                            <th style="width:150px;">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <foreach name="lists" item="vo" key="key">
+                        <tr>
+                            <td>
+                                <span class="badge pull-left">{$key+1}</span>
+                            </td>
+                            <td>
+                                {$vo.order.order_number}
+                            </td>
+                            <php>
+                                $good_datas = $vo['order']['goods_datas'];
+                                $good_datas = json_decode($good_datas,true);
+                            </php>
+                            <td ><img src="<?php echo $good_datas[0]['cover'];?>" style="width: 30px; height: 30px;border:1px solid #ccc;padding:1px;float:left;"><?php echo $good_datas[0]['title'];?></td>
+                            <td><img src="{$vo.uid.headimgurl}" style="width: 30px; height: 30px;border:1px solid #ccc;padding:1px;">{$vo.uid.nickname|deal_emoji}</td>
+                            <td style="color:#ff6600">
+                                <php>
+                                    for($i=0;$i<$vo['star'];$i++){
+                                        echo '<i class="fa fa-star"></i>';
+                                    }
+                                </php>
+                            </td>
+                            <td>
+                                <eq name="vo.status" value="0">
+                                    <label class="label label-danger">未回复</label>
+                                    <else/>
+                                    <label class="label label-info">已回复</label>
+                                </eq>
+                            </td>
+                            <td>{$vo.time|time_format}</td>
+                            <td>
+                                <a class="btn btn-default btn-sm"  href="{:addons_url('Shop://Goods/evaluate_reply',array('id'=>$vo[id]))}" title="进行回复"><i class="fa fa-reply"></i></a>
+                                <a class="btn btn-default btn-sm"  href="{:addons_url('Shop://Goods/evaluate_del',array('id'=>$vo[id]))}" onclick="return confirm('确认删除此评价吗？');return false;"><i class="fa fa-times"></i></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                            </td>
+                            <td colspan="7">
+                                <b>{$vo.uid.nickname|deal_emoji}：</b><b>{$vo.ev_content}</b>
+                            </td>
+                        </tr >
+                        <eq name="vo.status" value="1">
+                        <tr>
+                            <td></td>
+                            <td colspan="7" style="color: red;">
+                                <b>店家回复：</b><b >{$vo.ev_content_reply}</b>
+                                <br>
+                                <b>回复时间：</b><b >{$vo.reply_time|time_format}</b>
+                            </td>
+                        </tr>
+                        </eq>
+                        </foreach>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+</block>
+<block name="script">
+    <script>
+        var start = {
+            elem: '#start',
+            format: 'YYYY-MM-DD ',
+            //min: laydate.now(), //设定最小日期为当前日期
+            min: '1970-01-01',
+            max: '2099-06-16 ', //最大日期
+            istime: true,
+            istoday: false,
+            choose: function(datas){
+                end.min = datas; //开始日选好后，重置结束日的最小日期
+                end.start = datas; //将结束日的初始值设定为开始日
+            }
+        };
+        var end = {
+            elem: '#end',
+            format: 'YYYY-MM-DD ',
+            //min: laydate.now(),
+            min: '1970-01-01',
+            max: '2099-06-16 ',
+            istime: true,
+            istoday: false,
+            choose: function(datas){
+                start.max = datas; //结束日选好后，重置开始日的最大日期
+            }
+        };
+        laydate(start);
+        laydate(end);
+        laydate.skin('dahong');
+
+    </script>
+    <script>
+        $(function () {
+            $("#search").click(function () {
+                var url = $(this).attr('url');
+                //评价者
+                var order_number = $("#order_number").val();
+                order_number = $("#order_number").attr('name') + '=' + order_number;
+                //评价者
+                var nickname = $("#nickname").val();
+                nickname = $("#nickname").attr('name') + '=' + nickname;
+                //开始时间
+                var start = $('#start').text();
+                if (start != '') {
+                    start = new Date(start).getTime() / 1000;
+                    start = $('#start').attr('name') + '=' + start;
+                }
+                //结束时间
+                var end = $("#end").text();
+                if (end != '') {
+                    end = new Date(end).getTime() / 1000;
+                    end = $('#end').attr('name') + '=' + end;
+                }
+                if (url.indexOf('?') > 0) {
+                    url += '&' + start + '&' + end + '&' + order_number + '&' + nickname ;
+                } else {
+                    url += '?' + start + '&' + end + '&' + order_number + '&' + nickname;
+                }
+                window.location.href = url;
+            });
+        });
+    </script>
+</block>

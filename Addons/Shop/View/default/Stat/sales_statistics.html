@@ -1,0 +1,308 @@
+<extend name="Base/common"/>
+<block name="body">
+    <!--<link rel="stylesheet" href="./bootstrap/css/bootstrap.min.css">-->
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="__STATIC__/shop.css?v={:SITE_VERSION}" rel="stylesheet">
+    <script type="text/javascript" src="__STATIC__/laydate/laydate.js"></script>
+    <script type="text/javascript" src="__STATIC__/layer/layer.js"></script>
+    <script type="text/javascript" src="__STATIC__/highcharts-4.0.1/js/highcharts.js"></script>
+    <script type="text/javascript" src="__STATIC__/highcharts-4.0.1/js/modules/exporting.js"></script>
+    <style>
+        .navbar-inverse {
+            background-color: #fff;
+            border-color: #fff;
+        }
+
+        .navbar-fixed-bottom, .navbar-fixed-top {
+            position: static;
+            right: 0;
+            left: 0;
+            z-index: 0;
+        }
+    </style>
+    <div class="span9 page_message">
+        <section id="contents">
+            <ul class="nav nav-tabs">
+                <li ><a href="{:addons_url('Shop://Stat/order_stat')}">订单统计</a></li>
+                <li class="active"><a href="{:addons_url('Shop://Stat/sales_statistics')}">销售统计</a></li>
+                <!--<li><a href="{:addons_url('Shop://Stat/sale_rankings')}">商品销售排行</a></li>-->
+                <li><a href="{:addons_url('Shop://Stat/order_details')}">商品销售明细</a></li>
+                <li><a href="{:addons_url('Shop://Stat/consumer_rankings')}">会员消费排行</a></li>
+            </ul>
+            <br>
+            <div class="panel panel-info">
+                <div class="panel-heading">按年、月、日统计商城交易额</div>
+                <div class="panel-body">
+
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">年度数据：</label>
+                            <div class="col-md-2">
+                                <label class="control-label" style="color: red;">默认显示10年的数据</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">月度数据：</label>
+                            <div class="col-md-2">
+                                <select name="month_year" id="month_year" class="form-control">
+                                    <option value=""></option>
+                                    <option value="2016">2016年</option>
+                                    <option value="2017">2017年</option>
+                                    <option value="2018">2018年</option>
+                                    <option value="2019">2019年</option>
+                                    <option value="2020">2020年</option>
+                                    <option value="2021">2021年</option>
+                                    <option value="2022">2022年</option>
+                                    <option value="2023">2023年</option>
+                                    <option value="2024">2024年</option>
+                                    <option value="2025">2025年</option>
+                                    <option value="2026">2026年</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">每天数据：</label>
+                            <div class="col-md-2">
+                                <select name="day_year" id="day_year" class="form-control">
+                                    <option value=""></option>
+                                    <option value="2016">2016年</option>
+                                    <option value="2017">2017年</option>
+                                    <option value="2018">2018年</option>
+                                    <option value="2019">2019年</option>
+                                    <option value="2020">2020年</option>
+                                    <option value="2021">2021年</option>
+                                    <option value="2022">2022年</option>
+                                    <option value="2023">2023年</option>
+                                    <option value="2024">2024年</option>
+                                    <option value="2025">2025年</option>
+                                    <option value="2026">2026年</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <select name="day_month" id="day_month" class="form-control">
+                                    <option value=""></option>
+                                    <option value="01">1月</option>
+                                    <option value="02">2月</option>
+                                    <option value="03">3月</option>
+                                    <option value="04">4月</option>
+                                    <option value="05">5月</option>
+                                    <option value="06">6月</option>
+                                    <option value="07">7月</option>
+                                    <option value="08">8月</option>
+                                    <option value="09">9月</option>
+                                    <option value="10">10月</option>
+                                    <option value="11">11月</option>
+                                    <option value="12">12月</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3"></label>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-default" id="search"><i class="fa fa-search"></i>
+                                    搜索
+                                </button>
+                                <!--<button type="submit" name="export" value="1" class="btn btn-primary">导出 Excel</button>-->
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        交易额总数：<span style="color:red; ">{$total_money}</span>，
+                        <!--最高交易量：<span style="color:red; ">1</span> <span>(2016年9月</span>)，-->
+                        最高交易额：<span style="color:red; ">{$max_transacton}</span> <b>({$max_time|time_format})</b>
+                    </div>
+                    <div class="panel-body">
+                        <div id="container_year" style="min-width: 310px; height: 400px; margin: 0 auto;display: block; "></div>
+                        <div id="container_month"
+                             style="min-width: 310px; height: 400px; margin: 0 auto;display: none"></div>
+                        <div id="container_day"
+                             style="min-width: 310px; height: 400px; margin: 0 auto;display: none;"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</block>
+<block name="script">
+    <script type="text/javascript">
+        $(function () {
+
+            $('#container_year').highcharts({
+                title: {
+                    text: '按年统计',
+                    x: -20 //center
+                },
+                subtitle: {
+                    text: '',
+                    x: -20
+                },
+                xAxis: {
+//                    categories: ['2016年', '2017年', '2018年', '2019年', '2020年', '2021年',
+//                        '2022年', '2023年', '2024年', '2025年', '2026年']
+                    categories: {$every_year}
+                },
+                yAxis: {
+                    title: {
+                        text: '金额 (元)'
+                    },
+                    plotLines: [{
+                        value: 0,
+                        width: 1,
+                        color: '#808080'
+                    }]
+                },
+                tooltip: {
+                    valueSuffix: '元'
+                },
+                legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'middle',
+                    borderWidth: 0
+                },
+                series: [
+                    {
+                        name: '交易额',
+                        data: {$year_total_price}
+                    }
+                ]
+            });
+            $("#search").click(function () {
+                var is_month_year = $("select[name=month_year]").val();
+                var is_day_year = $("select[name=day_year]").val();
+                var is_day_month = $("select[name=day_month]").val();
+                if(is_month_year && is_day_year){
+                    layer.msg('月度数据和每天数据不能一起选！',{time: 2000});
+                }
+                if(is_month_year && is_day_month){
+                    layer.msg('月度数据和每天数据不能一起选！',{time: 2000});
+                }
+                if(is_month_year == "" && is_day_year == "" && is_day_month==""){
+                    $("#container_year").show();
+                    $("#container_month").hide();
+                    $("#container_day").hide();
+                }
+                if (is_month_year && is_day_year == "" && is_day_month=="") {
+                    $.ajax({
+                        url: "{:addons_url('Shop://Stat/sales_statistics')}",
+                        type: "POST",
+                        dataType: "json",
+                        data:{is_month_year:is_month_year},
+                        success:function (data) {
+                            var every_month =data['every_month'];
+                            var month_total_price =data['month_total_price'];
+                            var choose_year =data['choose_year'];
+                            $("#container_year").hide();
+                            $("#container_month").show();
+                            $("#container_day").hide();
+                            $('#container_month').highcharts({
+                                title: {
+                                    text: '按月统计('+choose_year+'年)',
+                                    x: -20 //center
+                                },
+                                subtitle: {
+                                    text: '',
+                                    x: -20
+                                },
+                                xAxis: {
+                                    categories: every_month
+//                    categories: ['一月', '二月', '三月', '四月', '五月', '六月',
+//                        '七月', '八月', '九月', '十月', '十一月', '十二月']
+                                },
+                                yAxis: {
+                                    title: {
+                                        text: '金额 (元)'
+                                    },
+                                    plotLines: [{
+                                        value: 0,
+                                        width: 1,
+                                        color: '#808080'
+                                    }]
+                                },
+                                tooltip: {
+                                    valueSuffix: '元'
+                                },
+                                legend: {
+                                    layout: 'vertical',
+                                    align: 'right',
+                                    verticalAlign: 'middle',
+                                    borderWidth: 0
+                                },
+                                series: [
+                                    {
+                                        name: '金额',
+                                        data: month_total_price
+                                    }
+                                ]
+                            });
+
+                        }
+                    });
+                }
+                if(is_day_year && is_day_month && is_month_year == "") {
+                    $.ajax({
+                        url: "{:addons_url('Shop://Stat/sales_statistics')}",
+                        type: "POST",
+                        dataType: "json",
+                        data:{is_day_year:is_day_year,is_day_month:is_day_month},
+                        success:function (data) {
+                            var every_day =data['every_day'];
+                            var day_total_price =data['day_total_price'];
+                            var choose_day =data['choose_day'];
+                            $("#container_year").hide();
+                            $("#container_month").hide();
+                            $("#container_day").show();
+                            $('#container_day').highcharts({
+                                title: {
+                                    text: '按日统计('+choose_day+')',
+                                    x: -20 //center
+                                },
+                                subtitle: {
+                                    text: '',
+                                    x: -20
+                                },
+                                xAxis: {
+                                    categories: every_day
+                                },
+                                yAxis: {
+                                    title: {
+                                        text: '金额 (元)'
+                                    },
+                                    plotLines: [{
+                                        value: 0,
+                                        width: 1,
+                                        color: '#808080'
+                                    }]
+                                },
+                                tooltip: {
+                                    valueSuffix: '元'
+                                },
+                                legend: {
+                                    layout: 'vertical',
+                                    align: 'right',
+                                    verticalAlign: 'middle',
+                                    borderWidth: 0
+                                },
+                                series: [
+                                    {
+                                        name: '金额',
+                                        data: day_total_price
+                                    }
+                                ]
+                            });
+
+                        }
+                    });
+
+                }
+            });
+        });
+
+    </script>
+</block>

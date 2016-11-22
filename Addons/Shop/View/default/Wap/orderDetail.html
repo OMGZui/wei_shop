@@ -1,0 +1,176 @@
+<include file="Public/mobile_head"/>
+<link href="{:ADDON_PUBLIC_PATH}/mobile/common.css?v={:SITE_VERSION}" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{:ADDON_PUBLIC_PATH}/mobile/shop.js?v={:SITE_VERSION}"></script>
+<body class="withFoot">
+<style type="text/css">
+    /*---------------------------------------demo css--------------------------------------------*/
+    #starBox{height:20px;padding:5px;width:130px;margin:0 auto 10px;}
+    #starBox em{float:left;width:26px;height:20px;background:url(__PUBLIC__/star.png) 0 -20px no-repeat;}
+    /*#starNotice{font:12px SimSun;width:130px;margin:0 auto;}*/
+    /*-----------------------------------------------------------------------------------*/
+</style>
+
+<div class="container">
+    <div class="order_detail">
+        <div class="order">
+            <h3 class="mb_10">订单号:{$info.order_number}</h3>
+            <volist name="info.goods" id="gg">
+                <img src="{$gg.cover|get_cover_url}"/>
+                <p class="info">
+                    {$gg.title}
+                    <br/>购买数量：{$gg.num}
+                    <br/>价格:{$gg[price]*$gg[num]}元
+                </p>
+            </volist>
+        </div>
+        <div class="order_adress">
+            <p class="info">
+                收件人：{$addressInfo.truename}<br/>
+                联系方式：{$addressInfo.mobile}<br/>
+                收货地址：{$addressInfo.address}<br/>
+            </p>
+        </div>
+        <div class="order_action">
+
+            <if condition="$info[pay_status]==0 && $info[pay_type]!=10">
+                <p class="wait_pay">等待付款中...</p>
+                <div class="m_15">
+                    <a href="{:U('choose_pay')}&order_id={$info.id}" class="btn">立即付款</a>
+                </div>
+                <else/>
+                <eq name="info[is_send]" value="0">
+                    <p>等待卖家发货</p>
+                    <else/>
+                    <p>商品已发货&nbsp;&nbsp;&nbsp;</p>
+                    <p>发货方式:{$info.send_code_name}</p>
+                    <p>快递单号:{$info.send_number}</p>
+                    <p class="m_10">
+                        <if condition="$info['status_code']==3"><a class="btn" href="javascript:;"
+                                                                   onClick="confirmGetGoods('{:U('confirm_get',array('id'=>$info[id]))}');">确认收货</a>
+                        </if>
+                    </p>
+                    <div class="shipping_info" style="display:">
+                        <volist name="log" id="vo">
+                            <P><span>{$vo.cTime|time_format} </span></P>
+                            <p>{$vo.remark}</p>
+                            <p>&nbsp;</p>
+                        </volist>
+                    </div>
+                </eq>
+            </if>
+        </div>
+        <eq name="info[status_code]" value="4">
+            <form action="{:addons_url('Shop://Wap/refund_do')}" method="post" class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label  class="col-sm-2 control-label">退款原因：</label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control" rows="3" name="refund_reason"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label  class="col-sm-2 control-label">快递单号：</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="express_number">
+                    </div>
+                </div>
+                <input type="hidden" value="{:I('shop_id')}" name="shop_id">
+                <input type="hidden" value="{:I('id')}" name="id">
+                <input type="hidden" value="{$info.order_number}" name="order_number">
+                <input type="hidden" value="{$info.send_code}" name="send_code">
+                <input type="hidden" value="{$info.send_number}" name="send_number">
+                <input type="hidden" value="{$info.id}" name="order_id">
+                <button type="submit" id="" class="btn btn-info">提交申请</button>
+            </form>
+        </eq>
+
+        <eq name="info[status_code]" value="5">
+            <form action="{:addons_url('Shop://Wap/myComment')}" method="post">
+            <div class="comment">
+                <b>评价：</b>
+                <div id="starBox">
+                    <em></em>
+                    <em></em>
+                    <em></em>
+                    <em></em>
+                    <em></em>
+                    <!--<b id="starNotice"></b>-->
+                </div>
+                <input type="hidden" value="{$info.order_number}" id="order_number" name="order_number">
+                <input type="hidden" id="starNotice" value="" name="star">
+                <input type="hidden" id="goods_id" value="{$info.goods_id}" name="goods_id">
+                <textarea  id="ev_content" cols="30" rows="10" name="ev_content"></textarea>
+            </div>
+            <button type="submit" id="submit" class="btn btn-info">提交</button>
+            </form>
+        </eq>
+    </div>
+</div>
+<!-- 底部导航 -->
+<include file="_footer"/>
+<block name="script">
+    <script type="text/javascript">
+        $(function () {
+            var star = document.getElementsByTagName('em');
+            var oDiv = document.getElementById('starBox');
+            var temp = 0;
+            for(var i = 0, len = star.length; i < len; i++){
+                star[i].index = i;
+
+                star[i].onmouseover = function(){
+                    clear();
+                    for(var j = 0; j < this.index + 1; j++){
+                        star[j].style.backgroundPosition = '0 0';
+                    }
+                };
+
+                star[i].onmouseout = function(){
+                    for(var j = 0; j < this.index + 1; j++){
+                        star[j].style.backgroundPosition = '0 -20px';
+                    }
+                    current(temp);
+                };
+
+                star[i].onclick = function(){
+                    temp = this.index + 1;
+                    document.getElementById('starNotice').value = temp ;
+//                    document.getElementById('starNotice').innerHTML = temp + ' 颗星';
+                    current(temp);
+                }
+            }
+            //清除所有
+            function clear(){
+                for(var i = 0, len = star.length; i < len; i++){
+                    star[i].style.backgroundPosition = '0 -20px';
+                }
+            }
+            //显示当前第几颗星
+            function current(temp){
+                for(var i = 0; i < temp; i++){
+                    star[i].style.backgroundPosition = '0 0';
+                }
+            }
+
+/*
+            var order_number = $("#order_number").val();
+            var star2 = $("#starNotice").val();
+            var ev_content = $("#ev_content").val();
+            $("#submit").click(function () {
+                alert(star2);
+                alert(ev_content);
+                $.ajax({
+                    url : "{:addons_url('Shop://Wap/myComment')}",
+                    type : "json",
+                    method : "POST",
+                    data : {order_number:order_number,star:star2,ev_content:ev_content},
+                    success : function (data) {
+
+                    }
+                });
+            });
+*/
+        });
+    </script>
+
+</block>
+</body>
+</html>
